@@ -33,7 +33,7 @@ const HeroSection = () => {
         
         {/* UPPER CONTENT SECTION */}
         <div className="flex flex-col items-center text-center">
-          <div className="inline-flex mt-5 items-center gap-3 rounded-full border border-white/10 bg-white/5 px-6 py-2.5 text-[12px] font-semibold uppercase tracking-[0.24em] text-[#ffd55a] backdrop-blur-xl">
+          <div className="inline-flex mt-12 items-center gap-3 rounded-full border border-white/10 bg-white/5 px-6 py-2.5 text-[12px] font-semibold uppercase tracking-[0.24em] text-[#ffd55a] backdrop-blur-xl">
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#ffd55a] opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#ffd55a]"></span>

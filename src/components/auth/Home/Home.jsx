@@ -1,5 +1,4 @@
 import React from "react";
-
 import HeroSection from "./HeroSection";
 import Services from "./Services";
 import About from "./About";
@@ -16,25 +15,21 @@ import News from "./News";
 
 const Home = () => {
   return (
-    <>
-    
-     <div className="bg-[#050816]"  >
-       <HeroSection />
-      <Services/>
-      <About/>
-      <Distribution/>
-      <Grow/>
-      <Roadmap/>
-      <SliderSection/>
-      <Team/>
-      <Advisors/>
-      <ICO/>
-      <Token/>
-      <Partners/>
-      <News/>
-      </div>
-      
-    </>
+    <div className="bg-[#050816]">
+      <div id="home"><HeroSection /></div>
+      <div id="services"><Services /></div>
+      <div id="about"><About /></div>
+      <div id="distribution"><Distribution /></div>
+      <div id="grow"><Grow /></div>
+      <div id="roadmap"><Roadmap /></div>
+      <SliderSection />
+      <div id="team"><Team /></div>
+      <Advisors />
+      <ICO />
+      <Token />
+      <Partners />
+      <News />
+    </div>
   );
 };
 

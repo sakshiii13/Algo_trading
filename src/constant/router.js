@@ -27,7 +27,7 @@ export const UserRouters = {
     WITHDRAWAL: "/withdrawal",
     HELP_AND_SUPPORT: "/help-and-support",
 
-    REFERRAL_INCOME: "/referral-income",
+    LEVEL_INCOME: "/level-income",
     ROI_HISTORY: "/roi-history",
     ROI_ON_ROI_HISTORY: "/roi-on-roi-history",
     

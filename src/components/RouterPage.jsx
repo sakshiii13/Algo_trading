@@ -62,7 +62,7 @@ const RouterPage = () => {
             path={UserRouters.HELP_AND_SUPPORT}
             element={<HelpAndSupport />}
           />
-          <Route path={UserRouters.REFERRAL_INCOME} element={<ReferralIncom />} />
+          <Route path={UserRouters.LEVEL_INCOME} element={<ReferralIncom />} />
           <Route path={UserRouters.ROI_HISTORY} element={<RoiIncome />} />
           <Route path={UserRouters.ROI_ON_ROI_HISTORY} element={<LevelRoiIncome />} />
 
