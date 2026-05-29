@@ -29,6 +29,54 @@ const TABS = [
   { label: "Security", icon: Shield },
 ];
 
+// Global Dashboard Input styling
+const inputCls =
+  "w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-900 text-sm text-slate-100 placeholder-slate-700 outline-none focus:border-[#ff5d9f]/60 focus:ring-1 focus:ring-[#ff5d9f]/20 transition-all font-mono shadow-inner";
+
+// ✅ 1. PasswordInput को UserProfile के बाहर शिफ्ट किया ताकि Focus न हटे
+const PasswordInput = ({ label, field, stateKey, showPass, passwordData, setPasswordData, togglePass }) => (
+  <div className="mb-5">
+    <label className="block text-[11px] font-bold font-mono uppercase tracking-wider text-slate-500 mb-2">
+      {label}
+    </label>
+
+    <div className="relative group">
+      <input
+        type={showPass[stateKey] ? "text" : "password"}
+        value={passwordData[field]}
+        onChange={(e) =>
+          setPasswordData((prev) => ({
+            ...prev,
+            [field]: e.target.value,
+          }))
+        }
+        placeholder="••••••••"
+        className={inputCls}
+      />
+
+      <button
+        type="button"
+        onClick={() => togglePass(stateKey)}
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 hover:text-[#ff5d9f] transition-colors cursor-pointer"
+      >
+        {showPass[stateKey] ? <EyeOff size={16} /> : <Eye size={16} />}
+      </button>
+    </div>
+  </div>
+);
+
+// ✅ 2. ReadField को भी बाहर शिफ्ट करना बेहतर प्रैक्टिस है
+const ReadField = ({ label, value }) => (
+  <div>
+    <label className="block text-[11px] font-bold font-mono uppercase tracking-wider text-slate-500 mb-2">
+      {label}
+    </label>
+    <div className="px-4 py-3 bg-slate-950/40 rounded-xl text-sm text-slate-300 border border-slate-900/60 font-mono shadow-inner truncate">
+      {value || <span className="text-slate-800">NOT_SET</span>}
+    </div>
+  </div>
+);
+
 const UserProfile = () => {
   const { user } = useSelector((state) => state.auth);
 
@@ -247,52 +295,6 @@ const UserProfile = () => {
 
   const togglePass = (field) =>
     setShowPass((prev) => ({ ...prev, [field]: !prev[field] }));
-
-  // Global Dashboard Input styling
-  const inputCls =
-    "w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-900 text-sm text-slate-100 placeholder-slate-700 outline-none focus:border-[#ff5d9f]/60 focus:ring-1 focus:ring-[#ff5d9f]/20 transition-all font-mono shadow-inner";
-
-  const PasswordInput = ({ label, field, stateKey }) => (
-    <div className="mb-5">
-      <label className="block text-[11px] font-bold font-mono uppercase tracking-wider text-slate-500 mb-2">
-        {label}
-      </label>
-
-      <div className="relative group">
-        <input
-          type={showPass[stateKey] ? "text" : "password"}
-          value={passwordData[field]}
-          onChange={(e) =>
-            setPasswordData((prev) => ({
-              ...prev,
-              [field]: e.target.value,
-            }))
-          }
-          placeholder="••••••••"
-          className={inputCls}
-        />
-
-        <button
-          type="button"
-          onClick={() => togglePass(stateKey)}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 hover:text-[#ff5d9f] transition-colors cursor-pointer"
-        >
-          {showPass[stateKey] ? <EyeOff size={16} /> : <Eye size={16} />}
-        </button>
-      </div>
-    </div>
-  );
-
-  const ReadField = ({ label, value }) => (
-    <div>
-      <label className="block text-[11px] font-bold font-mono uppercase tracking-wider text-slate-500 mb-2">
-        {label}
-      </label>
-      <div className="px-4 py-3 bg-slate-950/40 rounded-xl text-sm text-slate-300 border border-slate-900/60 font-mono shadow-inner truncate">
-        {value || <span className="text-slate-800">NOT_SET</span>}
-      </div>
-    </div>
-  );
 
   return (
     <div className="bg-[#030712] p-4 md:p-8 space-y-8 text-slate-200 min-h-screen bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.08),rgba(255,255,255,0))] font-mono">
@@ -578,16 +580,28 @@ const UserProfile = () => {
                 label="Current_Auth_Key"
                 field="currentPassword"
                 stateKey="current"
+                showPass={showPass}
+                passwordData={passwordData}
+                setPasswordData={setPasswordData}
+                togglePass={togglePass}
               />
               <PasswordInput
                 label="New_Override_Key"
                 field="newPassword"
                 stateKey="new"
+                showPass={showPass}
+                passwordData={passwordData}
+                setPasswordData={setPasswordData}
+                togglePass={togglePass}
               />
               <PasswordInput
                 label="Confirm_New_Key"
                 field="confirmPassword"
                 stateKey="confirm"
+                showPass={showPass}
+                passwordData={passwordData}
+                setPasswordData={setPasswordData}
+                togglePass={togglePass}
               />
 
               {passwordData.newPassword && passwordData.confirmPassword && (
