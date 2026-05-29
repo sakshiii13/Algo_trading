@@ -7,8 +7,8 @@ export const mainContant = {
   appName: "EDGE",
   appURL: "",
   logo: logo,
-  contactNo: "+91 7069555773",
-  email: "hkudarha@gmail.com",
+  contactNo: "+91 9630265692",
+  email: "sakshikacher@gmail.com",
   address: "Navsari bilimora Gujarat, India - 396321",
 };
 

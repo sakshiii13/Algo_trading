@@ -49,16 +49,9 @@ export const sidebarMenu = {
       children: [
         {
           title: "Level Income",
-          path: UserRouters.REFERRAL_INCOME,
+          path: UserRouters. LEVEL_INCOME,
         },
-        // {
-        //   title: "ROI Income",
-        //   path: UserRouters.ROI_HISTORY,
-        // },
-        // {
-        //   title: "ROI on ROI Income",
-        //   path: UserRouters.ROI_ON_ROI_HISTORY,
-        // },
+        
       ],
     },
     {
