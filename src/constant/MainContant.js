@@ -13,11 +13,11 @@ export const mainContant = {
 };
 
 export const backendConfig = {
-  base: "http://192.168.29.96:6056/api",
-  origin: "http://192.168.29.96:6056",
+  // base: "http://192.168.29.96:6056/api",
+  // origin: "http://192.168.29.96:6056",
 
-  // base: "http://localhost:6056/api",
-  // origin: "http://localhost:6056",
+  base: "https://algotrading.starchainlabs.in/login/api",
+  origin: "https://algotrading.starchainlabs.in/login/",
 };
 
 export const Axios = axios.create({ 
