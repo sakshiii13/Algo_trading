@@ -1,7 +1,10 @@
+// src/pages/auth/Register.jsx
+
 import React, { useState } from "react";
 import { userRegister } from "../../api/user/user.api";
 import Swal from "sweetalert2";
 import { Link, useNavigate } from "react-router-dom";
+
 import {
   Eye,
   EyeOff,
@@ -15,6 +18,7 @@ import {
 
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/slice/authSlice";
+
 import { UserRouters } from "../../constant/router";
 
 const Register = () => {
@@ -22,6 +26,8 @@ const Register = () => {
   const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -31,6 +37,8 @@ const Register = () => {
     referredBy: "",
   });
 
+  // ================= HANDLE CHANGE =================
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -39,6 +47,8 @@ const Register = () => {
       [name]: value,
     }));
   };
+
+  // ================= HANDLE SUBMIT =================
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,10 +71,12 @@ const Register = () => {
     }
 
     try {
+      setLoading(true);
+
       const payload = {
         name: formData.name,
         email: formData.email,
-        mobile: formData.mobile,
+        phone: formData.mobile, // IMPORTANT FIX
         password: formData.password,
         referredBy: formData.referredBy,
       };
@@ -76,22 +88,29 @@ const Register = () => {
       console.log("REGISTER RESPONSE 👉", res);
 
       if (res?.success) {
+        const userData = res?.data?.user || res?.data;
+
         dispatch(
           loginSuccess({
-            user: res?.data?.user || res?.data,
+            user: userData,
             token: res?.token,
           })
         );
+
+        // ================= SAVE SESSION =================
 
         if (res?.token) {
           sessionStorage.setItem("token", res.token);
         }
 
-        if (res?.data?.role) {
-          sessionStorage.setItem("role", res.data.role);
+        if (userData?.role) {
+          sessionStorage.setItem("role", userData.role);
         }
 
-        sessionStorage.setItem("user", JSON.stringify(res?.data));
+        sessionStorage.setItem(
+          "user",
+          JSON.stringify(userData)
+        );
 
         Swal.fire({
           icon: "success",
@@ -120,24 +139,32 @@ const Register = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error?.message || "Something went wrong during registration",
+        text:
+          error?.message ||
+          "Something went wrong during registration",
         background: "#050816",
         color: "#fff",
         confirmButtonColor: "#ff5d9f",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-[#050816] font-[Inter] overflow-hidden">
-      {/* LEFT */}
+      
+      {/* LEFT SIDE */}
       <div className="relative flex items-center justify-center px-4 sm:px-6 lg:px-12 py-6 overflow-hidden bg-[#050816]">
+
         <div className="absolute top-[-50px] left-[-50px] w-[250px] h-[250px] rounded-full bg-cyan-500/10 blur-[100px]" />
 
         <div className="absolute bottom-[-50px] right-[-50px] w-[250px] h-[250px] rounded-full bg-pink-500/10 blur-[100px]" />
 
         <div className="relative z-10 w-full max-w-[460px] rounded-[32px] border border-white/5 bg-white/[0.02] backdrop-blur-2xl shadow-2xl px-6 py-6 sm:px-8 sm:py-8">
+
           {/* HEADER */}
+
           <div className="mb-6">
             <div className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-black tracking-widest text-[#ff5d9f]">
               <span className="text-[#ff5d9f] text-sm animate-pulse">
@@ -156,12 +183,15 @@ const Register = () => {
           </div>
 
           {/* FORM */}
+
           <form
             onSubmit={handleSubmit}
             className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3.5"
           >
+
             {/* NAME */}
-            <div className="md:col-span-2 group">
+
+            <div className="md:col-span-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1.5 block ml-1">
                 Name
               </label>
@@ -178,13 +208,14 @@ const Register = () => {
                   value={formData.name}
                   placeholder="User A"
                   onChange={handleChange}
-                  className="w-full h-11 rounded-xl border border-white/5 bg-white/[0.03] pl-11 pr-4 text-sm text-white font-mono outline-none placeholder:text-slate-700 focus:border-cyan-500/50"
+                  className="w-full h-11 rounded-xl border border-white/5 bg-white/[0.03] pl-11 pr-4 text-sm text-white outline-none placeholder:text-slate-700 focus:border-cyan-500/50"
                 />
               </div>
             </div>
 
             {/* EMAIL */}
-            <div className="group">
+
+            <div>
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1.5 block ml-1">
                 Email
               </label>
@@ -201,13 +232,14 @@ const Register = () => {
                   value={formData.email}
                   placeholder="a@gmail.com"
                   onChange={handleChange}
-                  className="w-full h-11 rounded-xl border border-white/5 bg-white/[0.03] pl-11 pr-4 text-sm text-white font-mono outline-none placeholder:text-slate-700 focus:border-cyan-500/50"
+                  className="w-full h-11 rounded-xl border border-white/5 bg-white/[0.03] pl-11 pr-4 text-sm text-white outline-none placeholder:text-slate-700 focus:border-cyan-500/50"
                 />
               </div>
             </div>
 
             {/* MOBILE */}
-            <div className="group">
+
+            <div>
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1.5 block ml-1">
                 Mobile
               </label>
@@ -222,15 +254,16 @@ const Register = () => {
                   type="text"
                   name="mobile"
                   value={formData.mobile}
-                  placeholder="9999999991"
+                  placeholder="9999999999"
                   onChange={handleChange}
-                  className="w-full h-11 rounded-xl border border-white/5 bg-white/[0.03] pl-11 pr-4 text-sm text-white font-mono outline-none placeholder:text-slate-700 focus:border-cyan-500/50"
+                  className="w-full h-11 rounded-xl border border-white/5 bg-white/[0.03] pl-11 pr-4 text-sm text-white outline-none placeholder:text-slate-700 focus:border-cyan-500/50"
                 />
               </div>
             </div>
 
             {/* PASSWORD */}
-            <div className="group">
+
+            <div>
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1.5 block ml-1">
                 Password
               </label>
@@ -245,14 +278,16 @@ const Register = () => {
                   type={showPassword ? "text" : "password"}
                   name="password"
                   value={formData.password}
-                  placeholder="123456"
+                  placeholder="******"
                   onChange={handleChange}
-                  className="w-full h-11 rounded-xl border border-white/5 bg-white/[0.03] pl-11 pr-12 text-sm text-white font-mono outline-none placeholder:text-slate-700 focus:border-cyan-500/50"
+                  className="w-full h-11 rounded-xl border border-white/5 bg-white/[0.03] pl-11 pr-12 text-sm text-white outline-none placeholder:text-slate-700 focus:border-cyan-500/50"
                 />
 
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() =>
+                    setShowPassword(!showPassword)
+                  }
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 hover:text-[#ff5d9f]"
                 >
                   {showPassword ? (
@@ -264,8 +299,9 @@ const Register = () => {
               </div>
             </div>
 
-            {/* REFERRAL CODE */}
-            <div className="group">
+            {/* REFERRAL */}
+
+            <div>
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1.5 block ml-1">
                 Referral Code
               </label>
@@ -282,27 +318,26 @@ const Register = () => {
                   value={formData.referredBy}
                   placeholder="Referral Code"
                   onChange={handleChange}
-                  className="w-full h-11 rounded-xl border border-white/5 bg-white/[0.03] pl-11 pr-4 text-sm text-white font-mono outline-none placeholder:text-slate-700 focus:border-cyan-500/50"
+                  className="w-full h-11 rounded-xl border border-white/5 bg-white/[0.03] pl-11 pr-4 text-sm text-white outline-none placeholder:text-slate-700 focus:border-cyan-500/50"
                 />
               </div>
             </div>
 
             {/* BUTTON */}
+
             <button
               type="submit"
-              className="md:col-span-2 w-full h-12 rounded-xl bg-[#ff5d9f] hover:bg-[#ff8a1c] text-black font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-lg shadow-[#ff5d9f]/20 transition-all active:scale-[0.98] mt-4 group"
+              disabled={loading}
+              className="md:col-span-2 w-full h-12 rounded-xl bg-[#ff5d9f] hover:bg-[#ff8a1c] text-black font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-lg shadow-[#ff5d9f]/20 transition-all active:scale-[0.98] mt-4 disabled:opacity-60"
             >
-              CREATE ACCOUNT
+              {loading ? "CREATING..." : "CREATE ACCOUNT"}
 
-              <ArrowRight
-                size={18}
-                className="group-hover:translate-x-1 transition-transform"
-              />
+              <ArrowRight size={18} />
             </button>
           </form>
 
           <p className="text-[10px] font-black uppercase tracking-widest text-slate-600 mt-6 text-center">
-            Existing User?{" "}
+            Existing User?
             <Link
               to="/login"
               className="text-[#ff5d9f] hover:text-white transition-colors ml-2"
@@ -313,8 +348,10 @@ const Register = () => {
         </div>
       </div>
 
-      {/* RIGHT */}
+      {/* RIGHT SIDE */}
+
       <div className="hidden lg:block relative overflow-hidden bg-[#050816]">
+
         <img
           src="https://img.freepik.com/premium-psd/bitcoin-safe-secure-digital-currency-storage-secure-crypto-vault-filled-with-golden-coins-representi_1465813-44.jpg"
           alt="crypto"
@@ -323,12 +360,14 @@ const Register = () => {
 
         <div className="absolute inset-0 bg-gradient-to-t from-[#050816] via-[#050816]/50 to-transparent" />
 
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#050816_100%)] opacity-70" />
-
         <div className="absolute inset-0 flex flex-col justify-end p-12 xl:p-16 text-white">
           <div className="max-w-lg space-y-6">
+
             <div className="flex items-center gap-3 text-[#ff5d9f]">
-              <ShieldCheck size={28} className="animate-pulse" />
+              <ShieldCheck
+                size={28}
+                className="animate-pulse"
+              />
 
               <p className="text-[10px] font-black tracking-[0.4em] uppercase">
                 Protocol_Security_Established
@@ -336,7 +375,9 @@ const Register = () => {
             </div>
 
             <h2 className="text-4xl xl:text-5xl font-black leading-tight italic uppercase tracking-tighter">
-              The_Next_Evolution <br />
+              The_Next_Evolution
+              <br />
+
               <span className="text-[#ff5d9f]">
                 Of_Asset_Control.
               </span>
@@ -347,8 +388,8 @@ const Register = () => {
             <p className="mt-3 text-slate-400 text-xs font-mono leading-relaxed uppercase tracking-wider">
               Encryption at rest. Total decentralization.
               <br />
-              Join the network and manage your digital assets with a
-              precision-engineered dashboard.
+              Join the network and manage your digital assets
+              with a precision-engineered dashboard.
             </p>
           </div>
         </div>

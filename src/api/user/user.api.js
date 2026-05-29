@@ -13,14 +13,29 @@ export const userLogin = async (data) => {
   }
 };
 
+// ================= USER REGISTER =================
+
 export const userRegister = async (data) => {
   try {
+    console.log("REGISTER API PAYLOAD 👉", data);
+
     const response = await Axios.post("/user/register", data);
+
+    console.log("REGISTER API RESPONSE 👉", response.data);
+
     return response.data;
   } catch (error) {
-    return error.response?.data || {
+    console.log(
+      "REGISTER API ERROR 👉",
+      error?.response?.data || error.message
+    );
+
+    return {
       success: false,
-      message: error.message || "Registration failed",
+      message:
+        error?.response?.data?.message ||
+        error?.message ||
+        "Registration failed",
     };
   }
 };

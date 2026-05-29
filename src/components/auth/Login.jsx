@@ -124,7 +124,7 @@ const Login = () => {
                 onClick={fillTestCreds}
                 className="text-xs text-slate-400 hover:text-[#ff5d9f] transition-colors"
               >
-                Use test credentials
+              
               </button>
             </div>
 
