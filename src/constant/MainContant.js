@@ -17,7 +17,7 @@ export const backendConfig = {
   // origin: "http://192.168.29.96:6056",
 
   base: "https://api.algo.starchainlabs.in/api",
-  origin: "https://api.algo.starchainlabs.in/",
+  origin: "https://api.algo.starchainlabs.in",
 };
 
 export const Axios = axios.create({ 

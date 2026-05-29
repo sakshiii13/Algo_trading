@@ -1,5 +1,5 @@
-import React from "react";
-import { LogOut, Shield, Radio } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { LogOut, Shield, Radio, Maximize2, Minimize2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../redux/slice/authSlice";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,32 @@ const DashboardHeader = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
+  
+  // Fullscreen state track karne ke liye
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Browser ke native change ko track karne ke liye effect (e.g. Esc press karne par state sync rahegi)
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
+  }, []);
+
+  const handleFullscreenToggle = async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        }
+      }
+    } catch (err) {
+      console.error("Error attempting to toggle fullscreen:", err);
+    }
+  };
 
   const handleLogout = () => {
     dispatch(logout());
@@ -50,6 +76,22 @@ const DashboardHeader = () => {
           </div>
 
           <div className="hidden md:block h-4 w-[1px] bg-slate-800 mx-1"></div>
+
+          {/* Full Screen Matrix Toggle Button */}
+          <button
+            onClick={handleFullscreenToggle}
+            className="flex items-center justify-center w-9 h-9 rounded-lg 
+            bg-indigo-500/10 hover:bg-indigo-500 text-indigo-400 hover:text-white
+            border border-indigo-500/20 hover:border-indigo-500
+            transition-all duration-300 group"
+            title={isFullscreen ? "Minimize Matrix" : "Maximize Matrix"}
+          >
+            {isFullscreen ? (
+              <Minimize2 size={14} className="group-hover:scale-90 transition-transform" />
+            ) : (
+              <Maximize2 size={14} className="group-hover:scale-110 transition-transform" />
+            )}
+          </button>
 
           {/* User Profile Trigger - Linked directly to user profile route */}
           <div 
